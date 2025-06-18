@@ -234,56 +234,6 @@ Run the test suite:
 pytest tests/
 ```
 
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests
-5. Submit a pull request
-
-## License
-
-[Add your license information here]
-
-## Citation
-
-If you use this pipeline in your research, please cite:
-
-```bibtex
-@software{molecular_search_pipeline,
-  title={Molecular Search Pipeline},
-  author={Your Name},
-  year={2024},
-  url={https://github.com/yourusername/MolSearch-GPT}
-}
-```
-
-## Troubleshooting
-
-### Common Issues
-
-1. **RDKit installation problems**:
-   ```bash
-   conda install -c conda-forge rdkit
-   ```
-
-2. **Pinecone connection issues**:
-   - Verify API key is set correctly
-   - Check internet connection
-   - Ensure index exists
-
-3. **Memory issues with large datasets**:
-   - Reduce batch size in config
-   - Use fewer samples
-   - Increase system memory
-
-### Getting Help
-
-- Check the logs in `pipeline.log`
-- Review the configuration in `config.yaml`
-- Open an issue on GitHub
-
 ## Roadmap
 
 - [ ] Support for more molecular generation models
