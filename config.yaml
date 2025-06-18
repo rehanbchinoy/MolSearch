@@ -1,0 +1,49 @@
+# Molecular Search Pipeline Configuration
+
+# Data paths
+data:
+  data_dir: "data"
+  models_dir: "models"
+  output_dir: "output"
+  zinc_data_path: "data/zinc.tab"  # Optional: path to local ZINC data
+
+# Model configuration
+model:
+  coati_model_url: "s3://terray-public/models/e3gnn_smiles_clip_e2e_1685977071_1686087379.pkl"
+  featurizer_type: "rdkit_2d"  # Options: "rdkit_2d", "chemgpt", "graphormer"
+  freeze_model: true
+
+# Generation parameters
+generation:
+  num_variations: 100
+  noise_scale: 0.35
+  max_zinc_samples: 100
+
+# Database configuration
+database:
+  db_path: "molsearch.db"
+  batch_size: 100
+
+# Pinecone configuration
+pinecone:
+  api_key: null  # Set via environment variable PINECONE_API_KEY
+  index_name: "molsearch"
+  batch_size: 10
+
+# Processing parameters
+processing:
+  n_jobs: -1  # Use all CPU cores
+  progress_bar: true
+  save_intermediate: false
+
+# Logging
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "pipeline.log"
+
+# Analysis parameters
+analysis:
+  tanimoto_threshold_high: 0.7
+  tanimoto_threshold_medium: 0.5
+  top_k_search: 100 
