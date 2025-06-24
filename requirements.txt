@@ -9,6 +9,7 @@ scipy>=1.7.0
 
 # Chemistry and molecular libraries
 # Using specific RDKit version that works with Python 3.11
+# Note: This is a pre-release version that supports Python 3.11
 rdkit-pypi==2023.3.1b1
 
 # Web interface

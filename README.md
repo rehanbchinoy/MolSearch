@@ -8,8 +8,6 @@ A comprehensive pipeline for molecular similarity search using RDKit and Streaml
 - **Molecular Featurization**: Convert molecules to feature vectors using RDKit descriptors
 - **SQLite Database Storage**: Local database for molecule storage and retrieval
 - **Streamlit Web Interface**: Interactive web application for molecular search
-- **Performance Analysis**: Comprehensive evaluation using similarity metrics
-- **Modular Design**: Clean, well-documented, and easily extensible codebase
 
 ## Quick Start
 
@@ -56,6 +54,8 @@ streamlit run app.py
 
 ### Setup
 
+#### Option 1: Using pip (Recommended for local development)
+
 1. **Clone the repository**:
    ```bash
    git clone https://github.com/rehanbchinoy/MolSearch.git
@@ -71,6 +71,25 @@ streamlit run app.py
 3. **Install dependencies**:
    ```bash
    pip install -r requirements.txt
+   ```
+
+#### Option 2: Using conda (Recommended for deployment)
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/rehanbchinoy/MolSearch.git
+   cd MolSearch
+   ```
+
+2. **Create conda environment**:
+   ```bash
+   conda env create -f environment.yml
+   conda activate molsearch
+   ```
+
+3. **Verify installation**:
+   ```bash
+   python -c "import rdkit; print('RDKit version:', rdkit.__version__)"
    ```
 
 ## Deployment
@@ -284,9 +303,13 @@ MolSearch/
 ├── app.py                   # Streamlit web interface
 ├── cli.py                   # Command line interface
 ├── config.yaml              # Configuration file
-├── requirements.txt         # Python dependencies
+├── requirements.txt         # Python dependencies (pip)
+├── environment.yml          # Conda environment file
+├── conda-requirements.txt   # Alternative conda requirements
 ├── runtime.txt              # Python version specification
 ├── packages.txt             # System dependencies
+├── .streamlit/
+│   └── config.toml          # Streamlit configuration
 ├── style.css                # Custom CSS styling
 ├── tests/                   # Test suite
 ├── data/                    # Data directory
@@ -320,17 +343,24 @@ If you encounter RDKit installation issues:
    - If deployment fails, check that Streamlit Cloud is using Python 3.11
    - RDKit doesn't support Python 3.12+ yet
 
-3. **Local Installation**: Use conda for easier RDKit installation
+3. **Conda Installation (Recommended)**: Use conda for easier RDKit installation
    ```bash
    conda create -n molsearch python=3.11
    conda activate molsearch
-   conda install -c conda-forge rdkit
+   conda install -c conda-forge rdkit=2023.3.1
    pip install -r requirements.txt
+   ```
+
+4. **Alternative: Use environment.yml**:
+   ```bash
+   conda env create -f environment.yml
+   conda activate molsearch
    ```
 
 #### Common Errors
 
-- **"No matching distribution found for rdkit-pypi"**: Update to Python 3.11
+- **"No matching distribution found for rdkit-pypi"**: Use conda installation instead
+- **"Unable to locate package #"**: This is a packages.txt parsing error - fixed in latest version
 - **"Module not found"**: Ensure all dependencies are installed
 - **"Port already in use"**: Change port with `streamlit run app.py --server.port 8502`
 
