@@ -14,11 +14,11 @@ A comprehensive pipeline for molecular similarity search using RDKit and Streaml
 ## Quick Start
 
 ### Live Demo
-Try the live application: [MolSearch on Streamlit Cloud](https://your-app-name.streamlit.app)
+Try the live application: [MolSearch on Streamlit Cloud](https://molsearch.streamlit.app)
 
 ### Local Development
 ```bash
-git clone <repository-url>
+git clone https://github.com/rehanbchinoy/MolSearch.git
 cd MolSearch
 pip install -r requirements.txt
 streamlit run app.py
@@ -49,14 +49,14 @@ streamlit run app.py
 
 ### Prerequisites
 
-- Python 3.8+
+- Python 3.8+ (3.11 recommended for best compatibility)
 - RDKit (for molecular operations)
 
 ### Setup
 
 1. **Clone the repository**:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/rehanbchinoy/MolSearch.git
    cd MolSearch
    ```
 
@@ -73,22 +73,20 @@ streamlit run app.py
 
 ## Deployment
 
-### Streamlit Cloud (Recommended)
+### Streamlit Cloud (Live Demo)
 
-1. **Push to GitHub**:
-   ```bash
-   git add .
-   git commit -m "Add MolSearch interface"
-   git push origin main
-   ```
+The application is currently deployed on Streamlit Cloud and available at:
+**https://molsearch.streamlit.app**
 
-2. **Deploy to Streamlit Cloud**:
-   - Go to [share.streamlit.io](https://share.streamlit.io)
-   - Connect your GitHub repository
-   - Set main file to `app.py`
-   - Click "Deploy"
+### Local Deployment
 
-3. **Get your app URL**: `https://your-app-name.streamlit.app`
+To run the Streamlit web interface locally:
+
+```bash
+streamlit run app.py
+```
+
+The web interface will be available at `http://localhost:8501`
 
 ### Other Deployment Options
 
@@ -119,7 +117,17 @@ processing:
 
 ## Usage
 
-### Basic Usage
+### Web Interface
+
+1. **Visit the live demo**: [https://molsearch.streamlit.app](https://molsearch.streamlit.app)
+2. **Choose input method**: Single SMILES, CSV upload, or example molecules
+3. **Enter a molecule**: Use SMILES notation (e.g., "CCO" for ethanol)
+4. **Configure search**: Set number of results to return
+5. **Search**: Click "Search Similar Molecules" to find similar compounds
+6. **View results**: See molecular structures, properties, and similarity scores
+7. **Download**: Export results as CSV
+
+### Programmatic Usage
 
 ```python
 from molsearch_pipeline import MolecularSearchPipeline, Config
@@ -147,16 +155,6 @@ python molsearch_pipeline.py
 # Run with custom configuration
 python molsearch_pipeline.py --config custom_config.yaml
 ```
-
-### Streamlit Web Interface
-
-To run the Streamlit web interface:
-
-```bash
-streamlit run app.py
-```
-
-The web interface will be available at `http://localhost:8501`
 
 ## Pipeline Components
 
@@ -285,26 +283,23 @@ MolSearch/
 ├── cli.py                   # Command line interface
 ├── config.yaml              # Configuration file
 ├── requirements.txt         # Python dependencies
+├── runtime.txt              # Python version specification
+├── packages.txt             # System dependencies
+├── style.css                # Custom CSS styling
 ├── tests/                   # Test suite
 ├── data/                    # Data directory
 ├── models/                  # Model directory
 └── output/                  # Output directory
 ```
 
-## Blog Integration
 
-To integrate MolSearch into your blog posts, use the HTML snippet from `blog-integration-example.html`. This provides:
-
-- Professional call-to-action button
-- App preview image
-- Feature highlights
-- Example usage instructions
 
 ## Roadmap
 
-- [ ] Enhanced Streamlit interface with molecule visualization
+- [x] Basic molecular similarity search
+- [x] Streamlit web interface
+- [x] RDKit integration
+- [x] Deployment to Streamlit Cloud
 - [ ] Support for more molecular descriptors
 - [ ] Integration with additional databases
-- [ ] Real-time molecular property prediction
-- [ ] Multi-objective optimization
-- [ ] Deployment to web hosting platform
+

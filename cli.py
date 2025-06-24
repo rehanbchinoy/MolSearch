@@ -138,9 +138,7 @@ Examples:
         help="Show what would be done without executing",
     )
 
-    parser.add_argument(
-        "--version", action="version", version="MolSearch v1.0.0"
-    )
+    parser.add_argument("--version", action="version", version="MolSearch v1.0.0")
 
     args = parser.parse_args()
 
