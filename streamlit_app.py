@@ -10,12 +10,19 @@ import pandas as pd
 import numpy as np
 from rdkit import Chem
 from rdkit.Chem import AllChem, DataStructs, Descriptors
-from rdkit.Chem.Draw import IPythonConsole
 import io
 import base64
 from PIL import Image
 import matplotlib.pyplot as plt
 import seaborn as sns
+
+# Try to import Draw, but make it optional
+try:
+    from rdkit.Chem import Draw
+    DRAW_AVAILABLE = True
+except ImportError:
+    DRAW_AVAILABLE = False
+    st.warning("⚠️ Molecular drawing is not available in this environment. Molecules will be displayed as SMILES strings only.")
 
 # Page configuration
 st.set_page_config(
@@ -93,6 +100,9 @@ def draw_molecule(mol, size=(300, 300)):
         if mol is None:
             return None
         
+        if not DRAW_AVAILABLE:
+            return None
+        
         # Create a figure with white background
         fig, ax = plt.subplots(figsize=(size[0]/100, size[1]/100))
         ax.set_facecolor('white')
@@ -145,6 +155,8 @@ def main():
                     img = draw_molecule(mol)
                     if img:
                         st.image(img, caption="Molecular Structure")
+                    else:
+                        st.write(f"**SMILES:** `{smiles_input}`")
                     
                     # Show properties
                     props = get_molecular_properties(mol)
@@ -187,6 +199,8 @@ def main():
                 img = draw_molecule(mol)
                 if img:
                     st.image(img, caption=f"{selected_example} Structure")
+                else:
+                    st.write(f"**{selected_example} SMILES:** `{smiles_input}`")
     
     with col2:
         st.header("🔍 Search Results")
@@ -229,6 +243,8 @@ def main():
                                 img = draw_molecule(result['Mol'], size=(200, 200))
                                 if img:
                                     st.image(img, caption=result['Name'])
+                                else:
+                                    st.write(f"**SMILES:** `{result['SMILES']}`")
                             
                             with col_b:
                                 # Similarity score with color coding

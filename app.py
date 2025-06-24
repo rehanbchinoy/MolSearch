@@ -2,10 +2,18 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 from rdkit import Chem
-from rdkit.Chem import Draw, Descriptors
+from rdkit.Chem import Descriptors
 from rdkit.Chem.Descriptors import MolWt
 import io
 from molsearch_pipeline import MolecularSearchPipeline, Config
+
+# Try to import Draw, but make it optional
+try:
+    from rdkit.Chem import Draw
+    DRAW_AVAILABLE = True
+except ImportError:
+    DRAW_AVAILABLE = False
+    st.warning("⚠️ Molecular drawing is not available in this environment. Molecules will be displayed as SMILES strings only.")
 
 
 # Load custom CSS
@@ -65,8 +73,11 @@ if input_method == "Single SMILES":
             # Display molecule
             col1, col2 = st.columns([1, 2])
             with col1:
-                img = Draw.MolToImage(mol, size=(300, 300))
-                st.image(img, caption=f"Query molecule: {query_smiles}")
+                if DRAW_AVAILABLE:
+                    img = Draw.MolToImage(mol, size=(300, 300))
+                    st.image(img, caption=f"Query molecule: {query_smiles}")
+                else:
+                    st.write(f"Query molecule: {query_smiles}")
             with col2:
                 st.markdown("**Molecular Properties:**")
                 st.write(f"**Molecular Weight:** {MolWt(mol):.2f}")
@@ -98,8 +109,11 @@ elif input_method == "Upload CSV":
                 if mol:
                     col1, col2 = st.columns([1, 2])
                     with col1:
-                        img = Draw.MolToImage(mol, size=(300, 300))
-                        st.image(img, caption=f"Query molecule: {query_smiles}")
+                        if DRAW_AVAILABLE:
+                            img = Draw.MolToImage(mol, size=(300, 300))
+                            st.image(img, caption=f"Query molecule: {query_smiles}")
+                        else:
+                            st.write(f"Query molecule: {query_smiles}")
                     with col2:
                         st.markdown("**Molecular Properties:**")
                         st.write(f"**Molecular Weight:** {MolWt(mol):.2f}")
@@ -133,8 +147,11 @@ else:  # Example molecules
     if mol:
         col1, col2 = st.columns([1, 2])
         with col1:
-            img = Draw.MolToImage(mol, size=(300, 300))
-            st.image(img, caption=f"Query molecule: {query_smiles}")
+            if DRAW_AVAILABLE:
+                img = Draw.MolToImage(mol, size=(300, 300))
+                st.image(img, caption=f"Query molecule: {query_smiles}")
+            else:
+                st.write(f"Query molecule: {query_smiles}")
         with col2:
             st.markdown("**Molecular Properties:**")
             st.write(f"**Molecular Weight:** {MolWt(mol):.2f}")
@@ -204,8 +221,11 @@ if query_smiles:
                             )
                             mol = row["mols"]
                             if mol:
-                                img = Draw.MolToImage(mol, size=(200, 200))
-                                st.image(img)
+                                if DRAW_AVAILABLE:
+                                    img = Draw.MolToImage(mol, size=(200, 200))
+                                    st.image(img)
+                                else:
+                                    st.write(f"SMILES: {row['smiles']}")
 
                             st.markdown(f"**SMILES:** `{row['smiles']}`")
 
