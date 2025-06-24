@@ -3,7 +3,7 @@
 
 # Core scientific computing
 # Note: This app requires Python 3.11 for RDKit compatibility
-numpy>=1.21.0
+numpy>=1.21.0,<2.0.0
 pandas>=1.3.0
 scipy>=1.7.0
 

@@ -1,6 +1,108 @@
-# MolSearch
+# MolSearch - Molecular Similarity Search Pipeline
 
-A comprehensive pipeline for molecular similarity search using RDKit and Streamlit for web interface.
+A robust molecular similarity search pipeline using RDKit and Streamlit, designed for chemical informatics and drug discovery applications.
+
+## Features
+
+- **Molecular Similarity Search**: Find similar molecules using Tanimoto coefficients
+- **RDKit Integration**: Full molecular processing and featurization
+- **Interactive Web Interface**: Beautiful Streamlit app with molecular visualization
+- **Database Support**: SQLite storage for molecular data
+- **Robust Drawing**: Multiple fallback methods for molecular visualization
+- **Export Capabilities**: Download results as CSV files
+
+## Quick Start
+
+### Prerequisites
+
+- Python 3.10 (required for RDKit compatibility)
+- pip or conda package manager
+
+### Installation
+
+1. **Clone the repository**:
+   ```bash
+   git clone <your-repo-url>
+   cd MolSearch-GPT
+   ```
+
+2. **Install dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **Run the Streamlit app**:
+   ```bash
+   streamlit run app.py
+   ```
+
+4. **Open your browser** and navigate to `http://localhost:8501`
+
+## Usage
+
+### Web Interface
+
+1. **Enter a SMILES string** or select from example molecules
+2. **Configure search parameters** (number of results, similarity threshold)
+3. **Click "Search Similar Molecules"** to find similar compounds
+4. **View results** with molecular properties and similarity scores
+5. **Download results** as CSV for further analysis
+
+### Example SMILES
+
+- **Ethanol**: `CCO`
+- **Benzene**: `c1ccccc1`
+- **Aspirin**: `CC(=O)OC1=CC=CC=C1C(=O)O`
+- **Fentanyl**: `CCC(=O)N(C1CCN(CC1)CCC2=CC=CC=C2)C3=CC=CC=C3`
+
+## Deployment
+
+### Streamlit Cloud
+
+1. **Push your code** to GitHub
+2. **Connect your repository** to Streamlit Cloud
+3. **Set Python version** to 3.10 in Streamlit Cloud settings
+4. **Deploy** - the app will automatically install dependencies
+
+### Configuration Files
+
+- `requirements.txt`: Python dependencies with NumPy <2.0.0 for RDKit compatibility
+- `runtime.txt`: Specifies Python 3.10
+- `packages.txt`: System dependencies for molecular drawing
+
+## Technical Details
+
+### Dependencies
+
+- **Core**: numpy<2.0.0, pandas, scipy
+- **Chemistry**: rdkit-pypi==2023.3.1b1
+- **Web**: streamlit>=1.28.0
+- **Visualization**: matplotlib, seaborn, Pillow
+
+### Architecture
+
+- **Pipeline**: Modular design with separate components for similarity calculation, featurization, and analysis
+- **Database**: SQLite for molecular storage and retrieval
+- **Drawing**: Robust fallback system for molecular visualization
+- **API**: Clean interfaces for integration with other tools
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgments
+
+- RDKit community for the excellent cheminformatics toolkit
+- Streamlit team for the amazing web framework
+- Open source contributors who made this possible
 
 ## Features
 
