@@ -15,6 +15,55 @@ except ImportError:
     DRAW_AVAILABLE = False
     st.warning("⚠️ Molecular drawing is not available in this environment. Molecules will be displayed as SMILES strings only.")
 
+def draw_molecule_robust(mol, size=(300, 300)):
+    """Try multiple methods to draw a molecule."""
+    if mol is None:
+        return None
+    
+    # Method 1: Try RDKit Draw
+    if DRAW_AVAILABLE:
+        try:
+            img = Draw.MolToImage(mol, size=size)
+            return img
+        except:
+            pass
+    
+    # Method 2: Try RDKit with different backend
+    if DRAW_AVAILABLE:
+        try:
+            import matplotlib.pyplot as plt
+            fig, ax = plt.subplots(figsize=(size[0]/100, size[1]/100))
+            img = Draw.MolToImage(mol, size=size)
+            plt.close(fig)
+            return img
+        except:
+            pass
+    
+    # Method 3: Generate a simple text representation
+    try:
+        from PIL import Image, ImageDraw, ImageFont
+        # Create a simple image with SMILES text
+        img = Image.new('RGB', size, color='white')
+        draw = ImageDraw.Draw(img)
+        
+        # Try to use a default font, fallback to basic if not available
+        try:
+            font = ImageFont.load_default()
+        except:
+            font = None
+        
+        smiles = Chem.MolToSmiles(mol)
+        # Center the text
+        bbox = draw.textbbox((0, 0), smiles, font=font)
+        text_width = bbox[2] - bbox[0]
+        text_height = bbox[3] - bbox[1]
+        x = (size[0] - text_width) // 2
+        y = (size[1] - text_height) // 2
+        
+        draw.text((x, y), smiles, fill='black', font=font)
+        return img
+    except:
+        return None
 
 # Load custom CSS
 def load_css():
@@ -73,8 +122,8 @@ if input_method == "Single SMILES":
             # Display molecule
             col1, col2 = st.columns([1, 2])
             with col1:
-                if DRAW_AVAILABLE:
-                    img = Draw.MolToImage(mol, size=(300, 300))
+                img = draw_molecule_robust(mol, size=(300, 300))
+                if img:
                     st.image(img, caption=f"Query molecule: {query_smiles}")
                 else:
                     st.write(f"Query molecule: {query_smiles}")
@@ -109,8 +158,8 @@ elif input_method == "Upload CSV":
                 if mol:
                     col1, col2 = st.columns([1, 2])
                     with col1:
-                        if DRAW_AVAILABLE:
-                            img = Draw.MolToImage(mol, size=(300, 300))
+                        img = draw_molecule_robust(mol, size=(300, 300))
+                        if img:
                             st.image(img, caption=f"Query molecule: {query_smiles}")
                         else:
                             st.write(f"Query molecule: {query_smiles}")
@@ -147,8 +196,8 @@ else:  # Example molecules
     if mol:
         col1, col2 = st.columns([1, 2])
         with col1:
-            if DRAW_AVAILABLE:
-                img = Draw.MolToImage(mol, size=(300, 300))
+            img = draw_molecule_robust(mol, size=(300, 300))
+            if img:
                 st.image(img, caption=f"Query molecule: {query_smiles}")
             else:
                 st.write(f"Query molecule: {query_smiles}")
@@ -221,8 +270,8 @@ if query_smiles:
                             )
                             mol = row["mols"]
                             if mol:
-                                if DRAW_AVAILABLE:
-                                    img = Draw.MolToImage(mol, size=(200, 200))
+                                img = draw_molecule_robust(mol, size=(200, 200))
+                                if img:
                                     st.image(img)
                                 else:
                                     st.write(f"SMILES: {row['smiles']}")

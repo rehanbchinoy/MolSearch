@@ -1,0 +1,13 @@
+# Minimal system dependencies for RDKit drawing
+libfreetype6-dev
+libpng-dev
+libjpeg-dev
+libtiff-dev
+libx11-dev
+libxrender-dev
+libxext-dev
+libxft-dev
+libfontconfig1-dev
+libcairo2-dev
+libpango1.0-dev
+libgdk-pixbuf2.0-dev 
