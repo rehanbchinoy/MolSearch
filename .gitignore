@@ -133,6 +133,7 @@ dmypy.json
 *.db
 *.sqlite
 *.sqlite3
+molsearch.db
 
 # Model files
 models/*.pkl
@@ -176,14 +177,14 @@ tmp/
 ehthumbs.db
 Thumbs.db
 
-# Pinecone
-pinecone_config.json
+# Configuration files with sensitive data
+config_local.yaml
+.env.local
+
+# Streamlit
+.streamlit/
 
 # Large files
 *.zip
 *.tar.gz
-*.rar
-
-# Configuration files with sensitive data
-config_local.yaml
-.env.local 
+*.rar 

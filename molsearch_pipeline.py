@@ -8,9 +8,6 @@ This pipeline provides:
 - Molecular featurization using RDKit descriptors
 - SQLite database storage and retrieval
 - Similarity search and analysis
-
-Author: [Your Name]
-Date: [Current Date]
 """
 
 import os
@@ -423,7 +420,7 @@ def main():
     # Example usage
     reference_smiles = "CCC(=O)N(C1CCN(CC1)CCC2=CC=CC=C2)C3=CC=CC=C3"  # Fentanyl
 
-    print("Molecular Search Pipeline")
+    print("MolSearch Pipeline")
     print("=" * 50)
     print(f"Reference molecule: {reference_smiles}")
     print(f"Output directory: {config.output_dir}")
@@ -448,21 +445,21 @@ def main():
         mol1 = Chem.MolFromSmiles("CCO")
         mol2 = Chem.MolFromSmiles("CCCO")
         similarity = SimilarityCalculator.compute_tanimoto_similarity(mol1, mol2)
-        print(f"✅ Similarity calculation works: {similarity:.3f}")
+        print(f"SUCCESS: Similarity calculation works: {similarity:.3f}")
 
         # Test featurization
         featurizer = MolecularFeaturizer(config)
         features = featurizer.featurize_molecules([mol1, mol2])
-        print(f"✅ Featurization works: {features.shape}")
+        print(f"SUCCESS: Featurization works: {features.shape}")
         print(f"   Feature names: {featurizer.get_feature_names()}")
 
         # Test molecule processing
         df = pipeline.process_molecules(test_smiles)
-        print(f"✅ Molecule processing works: {len(df)} molecules processed")
+        print(f"SUCCESS: Molecule processing works: {len(df)} molecules processed")
 
         # Test similarity search
         results = pipeline.find_similar_molecules("CCO", df, top_k=3)
-        print(f"✅ Similarity search works: {len(results)} results found")
+        print(f"SUCCESS: Similarity search works: {len(results)} results found")
         print(
             f"   Top result: {results.iloc[0]['smiles']} (similarity: {results.iloc[0]['similarity']:.3f})"
         )
@@ -471,12 +468,12 @@ def main():
         with DatabaseManager(config) as db:
             db.create_tables()
             db.insert_molecules(df)
-            print("✅ Database operations work")
+            print("SUCCESS: Database operations work")
 
-        print("\n🎉 All tests passed! Pipeline is ready to use.")
+        print("\nALL TESTS PASSED! Pipeline is ready to use.")
 
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"ERROR: {e}")
 
 
 if __name__ == "__main__":

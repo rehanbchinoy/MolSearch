@@ -78,7 +78,7 @@ def validate_smiles(smiles: str) -> bool:
 def main():
     """Main CLI function."""
     parser = argparse.ArgumentParser(
-        description="Molecular Search Pipeline - Find similar molecules using AI",
+        description="MolSearch - Find similar molecules using AI",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
@@ -139,7 +139,7 @@ Examples:
     )
 
     parser.add_argument(
-        "--version", action="version", version="Molecular Search Pipeline v1.0.0"
+        "--version", action="version", version="MolSearch v1.0.0"
     )
 
     args = parser.parse_args()

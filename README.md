@@ -1,38 +1,47 @@
-# Molecular Search Pipeline
+# MolSearch
 
-A comprehensive pipeline for molecular similarity search using state-of-the-art molecular generation, featurization, and vector similarity search techniques.
+A comprehensive pipeline for molecular similarity search using RDKit and Streamlit for web interface.
 
 ## Features
 
-- **Molecular Generation**: Generate novel molecules similar to reference compounds using COATI models
-- **Molecular Featurization**: Convert molecules to high-dimensional vectors using RDKit descriptors or pretrained models
-- **Vector Similarity Search**: Fast similarity search using Pinecone vector database
-- **Performance Analysis**: Comprehensive evaluation using Tanimoto similarity metrics
+- **Molecular Similarity Search**: Find similar molecules using Tanimoto coefficients
+- **Molecular Featurization**: Convert molecules to feature vectors using RDKit descriptors
+- **SQLite Database Storage**: Local database for molecule storage and retrieval
+- **Streamlit Web Interface**: Interactive web application for molecular search
+- **Performance Analysis**: Comprehensive evaluation using similarity metrics
 - **Modular Design**: Clean, well-documented, and easily extensible codebase
+
+## Quick Start
+
+### Live Demo
+Try the live application: [MolSearch on Streamlit Cloud](https://your-app-name.streamlit.app)
+
+### Local Development
+```bash
+git clone <repository-url>
+cd MolSearch
+pip install -r requirements.txt
+streamlit run app.py
+```
 
 ## Architecture
 
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Reference     │    │   Generated     │    │   ZINC Dataset  │
-│   Molecule      │    │   Molecules     │    │                 │
+│   Query         │    │   Molecular     │    │   Similarity    │
+│   Molecule      │    │   Featurizer    │    │   Search        │
 └─────────┬───────┘    └─────────┬───────┘    └─────────┬───────┘
           │                      │                      │
           └──────────────────────┼──────────────────────┘
                                  │
                     ┌─────────────▼─────────────┐
-                    │   Molecular Featurizer    │
-                    │  (RDKit/Graphormer/ChemGPT)│
+                    │   SQLite Database         │
+                    │   (Local Storage)         │
                     └─────────────┬─────────────┘
                                  │
                     ┌─────────────▼─────────────┐
-                    │   Vector Database         │
-                    │   (Pinecone)              │
-                    └─────────────┬─────────────┘
-                                 │
-                    ┌─────────────▼─────────────┐
-                    │   Similarity Search       │
-                    │   & Analysis              │
+                    │   Streamlit Interface     │
+                    │   (Web UI)                │
                     └───────────────────────────┘
 ```
 
@@ -42,14 +51,13 @@ A comprehensive pipeline for molecular similarity search using state-of-the-art 
 
 - Python 3.8+
 - RDKit (for molecular operations)
-- CUDA-compatible GPU (optional, for faster processing)
 
 ### Setup
 
 1. **Clone the repository**:
    ```bash
    git clone <repository-url>
-   cd MolSearch-GPT
+   cd MolSearch
    ```
 
 2. **Create a virtual environment**:
@@ -63,17 +71,32 @@ A comprehensive pipeline for molecular similarity search using state-of-the-art 
    pip install -r requirements.txt
    ```
 
-4. **Set up environment variables**:
+## Deployment
+
+### Streamlit Cloud (Recommended)
+
+1. **Push to GitHub**:
    ```bash
-   # Create .env file
-   echo "PINECONE_API_KEY=your_pinecone_api_key_here" > .env
+   git add .
+   git commit -m "Add MolSearch interface"
+   git push origin main
    ```
 
-5. **Download required models**:
-   ```bash
-   # The COATI model will be downloaded automatically on first use
-   # or you can manually download it to the models/ directory
-   ```
+2. **Deploy to Streamlit Cloud**:
+   - Go to [share.streamlit.io](https://share.streamlit.io)
+   - Connect your GitHub repository
+   - Set main file to `app.py`
+   - Click "Deploy"
+
+3. **Get your app URL**: `https://your-app-name.streamlit.app`
+
+### Other Deployment Options
+
+See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed instructions on:
+- Heroku deployment
+- Docker deployment
+- Railway deployment
+- Vercel deployment
 
 ## Configuration
 
@@ -82,16 +105,16 @@ The pipeline is configured via `config.yaml`. Key configuration options:
 ```yaml
 # Model configuration
 model:
-  featurizer_type: "rdkit_2d"  # Options: "rdkit_2d", "chemgpt", "graphormer"
+  featurizer_type: "rdkit_2d"  # Options: "rdkit_2d"
 
-# Generation parameters
-generation:
-  num_variations: 100
-  noise_scale: 0.35
+# Database configuration
+database:
+  db_path: "molsearch.db"
 
-# Pinecone configuration
-pinecone:
-  index_name: "molsearch"
+# Processing parameters
+processing:
+  batch_size: 10
+  max_molecules: 1000
 ```
 
 ## Usage
@@ -107,9 +130,12 @@ config = Config()
 # Initialize pipeline
 pipeline = MolecularSearchPipeline(config)
 
-# Run pipeline with fentanyl as reference
-reference_smiles = "CCC(=O)N(C1CCN(CC1)CCC2=CC=CC=C2)C3=CC=CC=C3"
-analysis, results = pipeline.run_full_pipeline(reference_smiles)
+# Process molecules
+smiles_list = ["CCO", "CCCO", "c1ccccc1"]
+df = pipeline.process_molecules(smiles_list)
+
+# Find similar molecules
+results = pipeline.find_similar_molecules("CCO", df, top_k=5)
 ```
 
 ### Command Line Interface
@@ -122,51 +148,54 @@ python molsearch_pipeline.py
 python molsearch_pipeline.py --config custom_config.yaml
 ```
 
-### Jupyter Notebook
+### Streamlit Web Interface
 
-For interactive exploration, use the provided Jupyter notebook:
+To run the Streamlit web interface:
 
 ```bash
-jupyter notebook main.ipynb
+streamlit run app.py
 ```
+
+The web interface will be available at `http://localhost:8501`
 
 ## Pipeline Components
 
-### 1. Molecular Generator (`MolecularGenerator`)
+### 1. Similarity Calculator (`SimilarityCalculator`)
 
-Generates novel molecules similar to a reference compound using COATI models.
+Calculates molecular similarities using Tanimoto coefficients.
 
 ```python
-generator = MolecularGenerator(config)
-generated_smiles = generator.generate_molecules(
-    reference_smiles="CCC(=O)N(C1CCN(CC1)CCC2=CC=CC=C2)C3=CC=CC=C3",
-    num_variations=100,
-    noise_scale=0.35
-)
+calculator = SimilarityCalculator()
+similarity = calculator.compute_tanimoto_similarity(mol1, mol2)
 ```
 
 ### 2. Molecular Featurizer (`MolecularFeaturizer`)
 
-Converts molecules to high-dimensional feature vectors.
+Converts molecules to feature vectors using RDKit descriptors.
 
 ```python
 featurizer = MolecularFeaturizer(config)
 features = featurizer.featurize_molecules(molecules)
 ```
 
-**Supported featurization methods**:
-- RDKit 2D descriptors
-- ChemGPT embeddings
-- Graphormer embeddings
+**Supported descriptors**:
+- Molecular Weight
+- LogP
+- Number of H-donors/acceptors
+- TPSA
+- Number of rotatable bonds
+- Number of aromatic rings
+- Heavy atom count
+- Ring count
 
-### 3. Vector Search Manager (`VectorSearchManager`)
+### 3. Database Manager (`DatabaseManager`)
 
-Handles vector similarity search using Pinecone.
+Handles SQLite database operations for molecule storage.
 
 ```python
-vector_manager = VectorSearchManager(config)
-vector_manager.upsert_vectors(ids, vectors)
-search_results = vector_manager.search_similar(query_vector, top_k=100)
+with DatabaseManager(config) as db:
+    db.create_tables()
+    db.insert_molecules(df)
 ```
 
 ### 4. Similarity Analyzer (`SimilarityAnalyzer`)
@@ -186,7 +215,6 @@ The pipeline generates several output files:
 output/
 ├── analysis_<reference_smiles>.json    # Analysis metrics
 ├── results_<reference_smiles>.csv      # Search results
-├── visualization_<reference_smiles>.png # Similarity plots
 └── pipeline.log                        # Execution log
 ```
 
@@ -212,18 +240,12 @@ The pipeline supports parallel processing for:
 - Efficient vector storage
 - Automatic garbage collection
 
-### GPU Acceleration
-
-- TensorFlow/GPU support for model inference
-- CUDA-optimized molecular operations
-
 ## Error Handling
 
 The pipeline includes comprehensive error handling:
 
-- **Model loading errors**: Graceful fallback to alternative models
-- **Network errors**: Retry mechanisms for API calls
 - **Invalid molecules**: Automatic filtering of invalid SMILES
+- **Database errors**: Graceful handling of database operations
 - **Memory errors**: Batch processing to handle large datasets
 
 ## Testing
@@ -234,10 +256,55 @@ Run the test suite:
 pytest tests/
 ```
 
+## Development
+
+### Local Development
+
+1. **Set up development environment**:
+   ```bash
+   pip install -r requirements.txt
+   pip install -e .
+   ```
+
+2. **Run tests**:
+   ```bash
+   pytest tests/
+   ```
+
+3. **Run Streamlit app locally**:
+   ```bash
+   streamlit run app.py
+   ```
+
+### File Structure
+
+```
+MolSearch/
+├── molsearch_pipeline.py    # Main pipeline implementation
+├── app.py                   # Streamlit web interface
+├── cli.py                   # Command line interface
+├── config.yaml              # Configuration file
+├── requirements.txt         # Python dependencies
+├── tests/                   # Test suite
+├── data/                    # Data directory
+├── models/                  # Model directory
+└── output/                  # Output directory
+```
+
+## Blog Integration
+
+To integrate MolSearch into your blog posts, use the HTML snippet from `blog-integration-example.html`. This provides:
+
+- Professional call-to-action button
+- App preview image
+- Feature highlights
+- Example usage instructions
+
 ## Roadmap
 
-- [ ] Support for more molecular generation models
-- [ ] Integration with additional vector databases
-- [ ] Web interface for interactive search
+- [ ] Enhanced Streamlit interface with molecule visualization
+- [ ] Support for more molecular descriptors
+- [ ] Integration with additional databases
 - [ ] Real-time molecular property prediction
 - [ ] Multi-objective optimization
+- [ ] Deployment to web hosting platform
