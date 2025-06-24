@@ -49,7 +49,9 @@ streamlit run app.py
 
 ### Prerequisites
 
-- Python 3.8+ (3.11 recommended for best compatibility)
+- **Python 3.11** (required for RDKit compatibility)
+  - RDKit does not support Python 3.12+ yet
+  - Python 3.10 and below may have compatibility issues
 - RDKit (for molecular operations)
 
 ### Setup
@@ -60,9 +62,9 @@ streamlit run app.py
    cd MolSearch
    ```
 
-2. **Create a virtual environment**:
+2. **Create a virtual environment with Python 3.11**:
    ```bash
-   python -m venv venv
+   python3.11 -m venv venv
    source venv/bin/activate  # On Windows: venv\Scripts\activate
    ```
 
@@ -292,8 +294,6 @@ MolSearch/
 └── output/                  # Output directory
 ```
 
-
-
 ## Roadmap
 
 - [x] Basic molecular similarity search
@@ -302,4 +302,50 @@ MolSearch/
 - [x] Deployment to Streamlit Cloud
 - [ ] Support for more molecular descriptors
 - [ ] Integration with additional databases
+
+## Troubleshooting
+
+### Deployment Issues
+
+#### RDKit Installation Problems
+
+If you encounter RDKit installation issues:
+
+1. **Python Version**: Ensure you're using Python 3.11
+   ```bash
+   python --version  # Should show Python 3.11.x
+   ```
+
+2. **Streamlit Cloud**: The app is configured to use Python 3.11 via `runtime.txt`
+   - If deployment fails, check that Streamlit Cloud is using Python 3.11
+   - RDKit doesn't support Python 3.12+ yet
+
+3. **Local Installation**: Use conda for easier RDKit installation
+   ```bash
+   conda create -n molsearch python=3.11
+   conda activate molsearch
+   conda install -c conda-forge rdkit
+   pip install -r requirements.txt
+   ```
+
+#### Common Errors
+
+- **"No matching distribution found for rdkit-pypi"**: Update to Python 3.11
+- **"Module not found"**: Ensure all dependencies are installed
+- **"Port already in use"**: Change port with `streamlit run app.py --server.port 8502`
+
+### Performance Issues
+
+- **Slow search**: Reduce the number of molecules in your dataset
+- **Memory errors**: Use smaller batch sizes in the configuration
+- **Timeout errors**: Increase timeout settings in Streamlit configuration
+
+### Getting Help
+
+1. Check the [live demo](https://molsearch.streamlit.app) to see if the issue is local
+2. Review the test files for working examples
+3. Open an issue on GitHub with:
+   - Python version
+   - Error message
+   - Steps to reproduce
 
